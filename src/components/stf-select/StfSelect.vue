@@ -1,25 +1,25 @@
 <script>
-import { eventHub } from './even-hub.js';
-import { getOffset, hasPositioFixedAncestor, isMob, addClass } from './dom-lib';
-import throttle from 'lodash.throttle';
+import { eventHub } from "./even-hub.js";
+import { getOffset, hasPositioFixedAncestor, isMob, addClass } from "./dom-lib";
+import throttle from "lodash.throttle";
 
 export default {
-  name: 'stf-select',
+  name: "stf-select",
 
   created() {
     this.idSelect =
-      's' + (Date.now() * Math.random()).toString().replace('.', '_');
+      "s" + (Date.now() * Math.random()).toString().replace(".", "_");
 
     this._optionSelectedCallback = event => {
       if (event.selectId === this.idSelect) {
         this._close();
-        this.$emit('input', event.value);
+        this.$emit("input", event.value);
         const searchInpitEl = this.$el.querySelector(
-          '.stf-select__search-input'
+          ".stf-select__search-input"
         );
         this._beforeSetValueFocus = true;
         searchInpitEl && searchInpitEl.focus();
-        setTimeout(() => this._beforeSetValueFocus = false);
+        setTimeout(() => (this._beforeSetValueFocus = false));
       }
 
       if (event.selectId !== this.idSelect) {
@@ -49,17 +49,17 @@ export default {
       }
     };
 
-    eventHub.$on('stf-select-option.selected', this._optionSelectedCallback);
-    eventHub.$on('stf-select-option.mounted', this._onOptionMounted);
-    eventHub.$on('stf-select-option.destroyed', this._onOptionDestroyed);
-    eventHub.$on('stf-select.opened', this._onOpenedSelect);
+    eventHub.$on("stf-select-option.selected", this._optionSelectedCallback);
+    eventHub.$on("stf-select-option.mounted", this._onOptionMounted);
+    eventHub.$on("stf-select-option.destroyed", this._onOptionDestroyed);
+    eventHub.$on("stf-select.opened", this._onOpenedSelect);
   },
 
   data() {
     return {
-      message: 'Hello Vue!',
+      message: "Hello Vue!",
       isOpened: false,
-      idSelect: '',
+      idSelect: "",
       isNeedHideOption: false,
       hasAncesroFixed: false,
       options: []
@@ -68,13 +68,13 @@ export default {
 
   beforeDestroy() {
     document.body.removeChild(this.__selectOptionsWrapEl);
-    window.removeEventListener('resize', this._runOnResize);
-    window.removeEventListener('scroll', this._runOnScroll, true);
-    window.removeEventListener('click', this._runOnWindowClick);
-    eventHub.$off('stf-select-option.selected', this._optionSelectedCallback);
-    eventHub.$off('stf-select-option.mounted', this._onOptionMounted);
-    eventHub.$off('stf-select-option.destroyed', this._onOptionDestroyed);
-    eventHub.$off('stf-select.opened', this._onOpenedSelect);
+    window.removeEventListener("resize", this._runOnResize);
+    window.removeEventListener("scroll", this._runOnScroll, true);
+    window.removeEventListener("click", this._runOnWindowClick);
+    eventHub.$off("stf-select-option.selected", this._optionSelectedCallback);
+    eventHub.$off("stf-select-option.mounted", this._onOptionMounted);
+    eventHub.$off("stf-select-option.destroyed", this._onOptionDestroyed);
+    eventHub.$off("stf-select.opened", this._onOpenedSelect);
 
     if (this._optionsMutationObserver) {
       this._optionsMutationObserver.disconnect();
@@ -83,11 +83,11 @@ export default {
 
   mounted() {
     this.__selectOptionsWrapEl = this.$el.querySelector(
-      '.stf-select__options-wraped'
+      ".stf-select__options-wraped"
     );
-    this.__selectOptionsEl = this.$el.querySelector('.stf-select__options');
+    this.__selectOptionsEl = this.$el.querySelector(".stf-select__options");
     document.body.appendChild(this.__selectOptionsWrapEl);
-    this.__selectContainerEl = this.$el.querySelector('.stf-select__container');
+    this.__selectContainerEl = this.$el.querySelector(".stf-select__container");
 
     this._addwidowResizeListener();
     this._addOutClickListener();
@@ -95,7 +95,7 @@ export default {
     this._addwidowScrollListener();
 
     this._isMob = isMob();
-    this._inputEl = this.$el.querySelector('input');
+    this._inputEl = this.$el.querySelector("input");
   },
   methods: {
     keyDown(event) {
@@ -109,7 +109,7 @@ export default {
         case 27:
           this._close();
           const searchInpitEl = this.$el.querySelector(
-            '.stf-select__search-input'
+            ".stf-select__search-input"
           );
           searchInpitEl && searchInpitEl.focus();
           break;
@@ -118,8 +118,9 @@ export default {
             this._open();
           } else if (!this.value) {
             const option = document.querySelector(
-              `.stf-select__options-wraped[select-id="${this
-                .idSelect}"] .stf-select-option`
+              `.stf-select__options-wraped[select-id="${
+                this.idSelect
+              }"] .stf-select-option`
             );
             if (option) {
               option.click();
@@ -150,10 +151,10 @@ export default {
         this._inputEl !== document.activeElement
       ) {
         this.isOpened = true;
-        addClass(this.$el, 'stf-select_opened');
+        addClass(this.$el, "stf-select_opened");
 
         this.hasAncesroFixed = hasPositioFixedAncestor(this.$el);
-        eventHub.$emit('stf-select-option.opened', {
+        eventHub.$emit("stf-select-option.opened", {
           selectId: this.idSelect
         });
 
@@ -169,13 +170,13 @@ export default {
         if (/[\wА-Яа-яїєЇЄь]/.test(charTyped)) {
           this._inputEl.value = charTyped;
         } else {
-          this._inputEl.value = '';
+          this._inputEl.value = "";
         }
 
-        let eventntInput = new Event('input');
+        let eventntInput = new Event("input");
         this._inputEl.dispatchEvent(eventntInput);
 
-        eventHub.$emit('stf-select.opened', { idSelect: this.idSelect });
+        eventHub.$emit("stf-select.opened", { idSelect: this.idSelect });
       }
     },
     onUnblur() {},
@@ -237,24 +238,24 @@ export default {
       ) {
         this.hasAncesroFixed = hasPositioFixedAncestor(this.$el);
         this.__selectOptionsEl.style.position = this.hasAncesroFixed
-          ? 'fixed'
-          : 'absolute';
+          ? "fixed"
+          : "absolute";
         this.__selectOptionsEl.style.top =
           containerOffset.top +
           this.__selectContainerEl.offsetHeight -
           (this.hasAncesroFixed ? window.pageYOffset : 0) +
-          'px';
+          "px";
         this.__selectOptionsEl.style.left =
           containerOffset.left -
           (this.hasAncesroFixed ? window.pageXOffset : 0) +
-          'px';
+          "px";
         this.__selectOptionsEl.style.width =
-          this.__selectContainerEl.offsetWidth + 'px';
+          this.__selectContainerEl.offsetWidth + "px";
       } else {
         this.hasAncesroFixed = hasPositioFixedAncestor(this.$el);
         this.__selectOptionsEl.style.position = this.hasAncesroFixed
-          ? 'fixed'
-          : 'absolute';
+          ? "fixed"
+          : "absolute";
         this.__selectOptionsEl.style.top =
           containerOffset.top -
           this.__selectContainerEl.clientHeight -
@@ -262,13 +263,13 @@ export default {
           (this.hasAncesroFixed ? window.pageYOffset : 0) -
           optionsHeight +
           this.__selectContainerEl.offsetHeight +
-          'px';
+          "px";
         this.__selectOptionsEl.style.left =
           containerOffset.left -
           (this.hasAncesroFixed ? window.pageXOffset : 0) +
-          'px';
+          "px";
         this.__selectOptionsEl.style.width =
-          this.__selectContainerEl.offsetWidth + 'px';
+          this.__selectContainerEl.offsetWidth + "px";
       }
     },
 
@@ -280,7 +281,7 @@ export default {
         }
       };
 
-      window.addEventListener('resize', this._runOnResize);
+      window.addEventListener("resize", this._runOnResize);
     },
     _addwidowScrollListener() {
       const vm = this;
@@ -288,7 +289,7 @@ export default {
         vm._calculatePositionAnsSize();
       }, 100);
 
-      window.addEventListener('scroll', this._runOnScroll, true);
+      window.addEventListener("scroll", this._runOnScroll, true);
     },
     _addOutClickListener() {
       const vm = this;
@@ -296,7 +297,7 @@ export default {
         vm._close();
       };
 
-      window.addEventListener('click', this._runOnWindowClick);
+      window.addEventListener("click", this._runOnWindowClick);
     },
     _initOnChangeDetection() {
       if (!MutationObserver) {
@@ -314,18 +315,19 @@ export default {
     },
     _open() {
       this.isOpened = true;
-      eventHub.$emit('stf-select-option.opened', {
+      this.$emit("select-opened");
+      eventHub.$emit("stf-select-option.opened", {
         selectId: this.idSelect
       });
-      addClass(this.$el, 'stf-select_opened');
-      const inputEl = this.$el.querySelector('input');
+      addClass(this.$el, "stf-select_opened");
+      const inputEl = this.$el.querySelector("input");
       if (inputEl !== document.activeElement) {
         if (inputEl) {
           inputEl.focus();
           inputEl.select();
         } else {
           const searchInpitEl = this.$el.querySelector(
-            '.stf-select__search-input'
+            ".stf-select__search-input"
           );
           if (searchInpitEl && searchInpitEl !== document.activeElement) {
             searchInpitEl.focus();
@@ -334,12 +336,12 @@ export default {
       }
 
       this._calculatePositionAnsSize();
-      this._inputEl = this.$el.querySelector('input');
-      eventHub.$emit('stf-select.opened', { idSelect: this.idSelect });
+      this._inputEl = this.$el.querySelector("input");
+      eventHub.$emit("stf-select.opened", { idSelect: this.idSelect });
     },
     _close() {
       this.isOpened = false;
-      this._inputEl = this.$el.querySelector('input');
+      this._inputEl = this.$el.querySelector("input");
     },
 
     _keyArrowDown(event) {
@@ -374,7 +376,7 @@ export default {
     },
     _getArrayElementForFocus() {
       const elements = [];
-      elements.push(...this.$el.querySelectorAll('input'));
+      elements.push(...this.$el.querySelectorAll("input"));
       elements.push(
         ...document.querySelectorAll(
           `[select-id="${this.idSelect}"] .stf-select-option`
@@ -415,7 +417,7 @@ function loadMore() {
         this.__selectOptionsEl.offsetHeight) *
         0.66
   ) {
-    this.$emit('loadMore', {});
+    this.$emit("loadMore", {});
   }
 }
 </script>
@@ -423,5 +425,4 @@ function loadMore() {
 <template src="./stf-select.html" ></template>
 
 <style lang="scss" src="./stf-select.scss">
-
 </style>
