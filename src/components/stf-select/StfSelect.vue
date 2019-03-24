@@ -342,6 +342,7 @@ export default {
     _close() {
       this.isOpened = false;
       this._inputEl = this.$el.querySelector("input");
+      this.$emit("select-closed");
     },
 
     _keyArrowDown(event) {
