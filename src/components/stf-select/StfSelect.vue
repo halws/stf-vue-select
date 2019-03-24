@@ -179,7 +179,9 @@ export default {
         eventHub.$emit("stf-select.opened", { idSelect: this.idSelect });
       }
     },
-    onUnblur() {},
+    onBlur() {
+      this.$emit("select-closed");
+    },
     onMouseWheal(event) {
       if (
         (this.__selectOptionsEl.scrollTop >=
@@ -342,7 +344,6 @@ export default {
     _close() {
       this.isOpened = false;
       this._inputEl = this.$el.querySelector("input");
-      this.$emit("select-closed");
     },
 
     _keyArrowDown(event) {
